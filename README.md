@@ -23,7 +23,6 @@ A simple and efficient quiz application built with **Golang**, providing both a 
 ├── /cmd                    # Application entry points
 │   ├── /api                # Initializes the HTTP API
 │   ├── /cli                # Command-line interface (CLI) using Cobra
-│
 ├── /internal
 │   ├── /app                # Application layer (Handlers)
 │   │   ├── /http           # API endpoints
