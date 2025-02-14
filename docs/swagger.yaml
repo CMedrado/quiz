@@ -1,0 +1,169 @@
+definitions:
+  question.AnswerQuestionRequest:
+    properties:
+      answer:
+        type: integer
+      number_question:
+        type: integer
+    required:
+    - answer
+    - number_question
+    type: object
+  question.AnswerQuestionResponse:
+    properties:
+      is_correct:
+        type: boolean
+    type: object
+  question.FullError:
+    properties:
+      title:
+        type: string
+      type:
+        type: string
+    type: object
+  question.GetQuestionResponse:
+    properties:
+      answers:
+        items:
+          type: string
+        type: array
+      number_question:
+        type: integer
+      question:
+        type: string
+    type: object
+  rank.FullError:
+    properties:
+      title:
+        type: string
+      type:
+        type: string
+    type: object
+  rank.GetLeaderboardResponse:
+    properties:
+      players:
+        items:
+          $ref: '#/definitions/rank.PlayerPosition'
+        type: array
+    type: object
+  rank.GetPlayerPositionResponse:
+    properties:
+      player:
+        $ref: '#/definitions/rank.PlayerPosition'
+    type: object
+  rank.PlayerPosition:
+    properties:
+      position:
+        type: integer
+      score:
+        type: integer
+      user_id:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /question/:
+    get:
+      description: Fetches the next available question for a user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/question.GetQuestionResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/question.FullError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/question.FullError'
+      summary: Get a Question
+      tags:
+      - Question
+    post:
+      consumes:
+      - application/json
+      description: Allows a user to submit an answer to a question
+      parameters:
+      - description: User ID
+        in: query
+        name: user
+        required: true
+        type: string
+      - description: User answer submission
+        in: body
+        name: requestBody
+        required: true
+        schema:
+          $ref: '#/definitions/question.AnswerQuestionRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/question.AnswerQuestionResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/question.FullError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/question.FullError'
+      summary: Submit an Answer
+      tags:
+      - Question
+  /rank/:
+    get:
+      description: Retrieves the overall leaderboard
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/rank.GetLeaderboardResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/rank.FullError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/rank.FullError'
+      summary: Get Leaderboard
+      tags:
+      - Rank
+  /rank/player/:
+    get:
+      description: Fetches the ranking position of a player
+      parameters:
+      - description: User ID
+        in: query
+        name: user
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/rank.GetPlayerPositionResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/rank.FullError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/rank.FullError'
+      summary: Get Player Position
+      tags:
+      - Rank
+swagger: "2.0"
